@@ -1,4 +1,5 @@
-package com.wora.javafxproject.models;
+package com.wora.javafxproject.models.entities;
+
 
 public class Customer {
     private int id;
@@ -6,6 +7,9 @@ public class Customer {
     private String lastName;
     private String email;
     private String phone;
+
+    public Customer() {
+    }
 
     public Customer(int id, String firstName, String lastName, String email, String phone) {
         this.id = id;
@@ -15,7 +19,7 @@ public class Customer {
         this.phone = phone;
     }
 
-    public int id() {
+    public int getId() {
         return id;
     }
 
@@ -23,7 +27,7 @@ public class Customer {
         this.id = id;
     }
 
-    public String firstName() {
+    public String getFirstName() {
         return firstName;
     }
 
@@ -31,7 +35,7 @@ public class Customer {
         this.firstName = firstName;
     }
 
-    public String lastName() {
+    public String getLastName() {
         return lastName;
     }
 
@@ -39,7 +43,7 @@ public class Customer {
         this.lastName = lastName;
     }
 
-    public String email() {
+    public String getEmail() {
         return email;
     }
 
@@ -47,7 +51,7 @@ public class Customer {
         this.email = email;
     }
 
-    public String phone() {
+    public String getPhone() {
         return phone;
     }
 

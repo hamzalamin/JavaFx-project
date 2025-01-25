@@ -1,14 +1,52 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.geometry.Insets?>
 
-<VBox spacing="10" alignment="CENTER" xmlns:fx="http://javafx.com/fxml">
-    <TableView fx:id="productsTable">
+<?import javafx.scene.control.ComboBox?>
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.wora.javafxproject.controllers.ProductController"
+      spacing="10">
+
+    <!-- Add padding using the <Insets> element -->
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <GridPane hgap="10" vgap="10">
+        <Label text="Name" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+        <TextField fx:id="nameField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+        <Label text="Price" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <TextField fx:id="priceField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+        <Label text="Category" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+        <ComboBox fx:id="categoryComboBox" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+        <Label text="Stock" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+        <TextField fx:id="stockField" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+    </GridPane>
+
+    <HBox spacing="10">
+        <Button text="Add Product" onAction="#addProduct"/>
+        <Button text="Delete Product" onAction="#deleteProduct"/>
+    </HBox>
+
+    <TableView fx:id="productTable">
         <columns>
-            <TableColumn text="ID" fx:id="idColumn"/>
-            <TableColumn text="Name" fx:id="nameColumn"/>
-            <TableColumn text="Price" fx:id="priceColumn"/>
+            <TableColumn text="Name" fx:id="name"/>
+            <TableColumn text="Price" fx:id="price"/>
+            <TableColumn text="Category" fx:id="category"/>
+            <TableColumn text="Stock" fx:id="stock"/>
         </columns>
     </TableView>
-    <Button text="Add Product" fx:id="addProductButton"/>
+
+
+    <Button text="Go to Orders" onAction="#goToOrders" style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+    <Button text="Go to Invoices" onAction="#goToInvoices" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
 </VBox>
