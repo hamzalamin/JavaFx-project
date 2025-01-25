@@ -1,0 +1,103 @@
+package com.wora.javafxproject.controllers;
+
+
+import com.wora.javafxproject.models.entities.Customer;
+import com.wora.javafxproject.repositories.interfaces.CustomerRepository;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+
+import java.sql.SQLException;
+
+public class CustomerController {
+    private CustomerRepository customerRepository;
+
+    @FXML private TableView<Customer> customerTable;
+    @FXML private TextField firstNameField;
+    @FXML private TextField lastNameField;
+    @FXML private TextField emailField;
+    @FXML private TextField phoneField;
+
+    @FXML
+    public void initialize() {
+        loadCustomers();
+        setupTableColumns();
+    }
+
+    private void setupTableColumns() {
+        // Configure table columns to map to Customer properties
+        TableColumn<Customer, String> firstNameCol = new TableColumn<>("First Name");
+        firstNameCol.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getFirstName()));
+
+        TableColumn<Customer, String> lastNameCol = new TableColumn<>("Last Name");
+        lastNameCol.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getLastName()));
+
+        customerTable.getColumns().setAll(firstNameCol, lastNameCol);
+    }
+
+    private void loadCustomers() {
+        ObservableList<Customer> customers =
+                FXCollections.observableArrayList(customerRepository.findAll());
+        customerTable.setItems(customers);
+    }
+
+    @FXML
+    public void addCustomer() {
+        Customer newCustomer = new Customer();
+        newCustomer.setFirstName(firstNameField.getText());
+        newCustomer.setLastName(lastNameField.getText());
+        newCustomer.setEmail(emailField.getText());
+        newCustomer.setPhone(phoneField.getText());
+
+        customerRepository.add(newCustomer);
+        loadCustomers();
+        clearFields();
+    }
+
+    @FXML
+    public void updateCustomer() {
+        Customer selectedCustomer = customerTable.getSelectionModel().getSelectedItem();
+        if (selectedCustomer != null) {
+            selectedCustomer.setFirstName(firstNameField.getText());
+            selectedCustomer.setLastName(lastNameField.getText());
+            selectedCustomer.setEmail(emailField.getText());
+            selectedCustomer.setPhone(phoneField.getText());
+
+            customerRepository.update(selectedCustomer);
+            loadCustomers();
+        }
+    }
+
+    @FXML
+    public void deleteCustomer() throws SQLException {
+        Customer selectedCustomer = customerTable.getSelectionModel().getSelectedItem();
+        if (selectedCustomer != null) {
+            customerRepository.delete(selectedCustomer.getId());
+            loadCustomers();
+        }
+    }
+
+    @FXML
+    public void selectCustomer() {
+        Customer selectedCustomer = customerTable.getSelectionModel().getSelectedItem();
+        if (selectedCustomer != null) {
+            firstNameField.setText(selectedCustomer.getFirstName());
+            lastNameField.setText(selectedCustomer.getLastName());
+            emailField.setText(selectedCustomer.getEmail());
+            phoneField.setText(selectedCustomer.getPhone());
+        }
+    }
+
+    private void clearFields() {
+        firstNameField.clear();
+        lastNameField.clear();
+        emailField.clear();
+        phoneField.clear();
+    }
+}
