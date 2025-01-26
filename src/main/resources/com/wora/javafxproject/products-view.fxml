@@ -7,8 +7,8 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.geometry.Insets?>
-
 <?import javafx.scene.control.ComboBox?>
+
 <VBox xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.wora.javafxproject.controllers.ProductController"
       spacing="10">
@@ -34,6 +34,7 @@
 
     <HBox spacing="10">
         <Button text="Add Product" onAction="#addProduct"/>
+        <Button text="Update Product" onAction="#updateProduct"/>
         <Button text="Delete Product" onAction="#deleteProduct"/>
     </HBox>
 
@@ -46,9 +47,7 @@
         </columns>
     </TableView>
 
-
     <Button text="Go to Orders" onAction="#goToOrders" style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
     <Button text="Go to Invoices" onAction="#goToInvoices" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
     <Button text="Go to Customer" onAction="#goToCustomer" style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
-
 </VBox>

@@ -26,7 +26,10 @@
 
     <Label fx:id="totalAmountLabel" text="0.00" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
 
-    <Button text="Generate Invoice" onAction="#generateInvoice" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+    <HBox spacing="10">
+        <Button text="Generate Invoice" onAction="#generateInvoice" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+        <Button text="Update Invoice" onAction="#updateInvoice" style="-fx-background-color: #FF9800; -fx-text-fill: white;"/>
+    </HBox>
 
     <TableView fx:id="invoicesTable" prefHeight="200">
         <columns>

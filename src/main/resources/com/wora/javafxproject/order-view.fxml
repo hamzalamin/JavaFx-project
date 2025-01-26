@@ -7,7 +7,6 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Button?>
 <VBox spacing="10" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.wora.javafxproject.controllers.OrderController">
-    <!-- Products Table (for selecting products) -->
     <Label text="Available Products" style="-fx-font-weight: bold;"/>
     <TableView fx:id="productsTable" prefHeight="150" prefWidth="600">
         <columns>
@@ -17,7 +16,6 @@
         </columns>
     </TableView>
 
-    <!-- Current Order Section -->
     <Label text="Current Order" style="-fx-font-weight: bold;"/>
     <HBox spacing="10">
         <ComboBox fx:id="customerComboBox" promptText="Select Customer"/>
@@ -26,17 +24,17 @@
         <Button text="Add Item" onAction="#addOrderItem"/>
     </HBox>
 
-    <!-- Current Order Items Table -->
     <TableView fx:id="orderItemsTable" prefHeight="150" prefWidth="600"/>
 
-    <!-- Total Amount and Create Order Button -->
     <HBox spacing="10">
         <Label text="Total Amount:"/>
         <Label fx:id="totalAmountLabel" text="0.00"/>
-        <Button text="Create Order" onAction="#createOrder"/>
+        <Button text="Edit Order" onAction="#editOrder" style="-fx-background-color: #FFC107; -fx-text-fill: black;"/>
+        <Button text="Update Order" onAction="#updateOrder" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+        <Button text="Cancel Order" onAction="#cancelOrder" style="-fx-background-color: #F44336; -fx-text-fill: white;"/>
+        <Button text="Delete Order" onAction="#deleteOrder" style="-fx-background-color: #E91E63; -fx-text-fill: white;"/>
     </HBox>
 
-    <!-- Saved Orders Table (displays orders from the database) -->
     <Label text="Saved Orders" style="-fx-font-weight: bold;"/>
     <TableView fx:id="savedOrdersTable" prefHeight="200" prefWidth="600">
         <columns>

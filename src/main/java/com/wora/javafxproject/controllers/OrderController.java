@@ -13,6 +13,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.StringConverter;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -219,6 +220,79 @@ public class OrderController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+    @FXML
+    public void editOrder() {
+        Order selectedOrder = savedOrdersTable.getSelectionModel().getSelectedItem();
+        if (selectedOrder == null) {
+            showAlert("No Selection", "Please select an order to edit");
+            return;
+        }
+
+        currentOrder = selectedOrder;
+        customerComboBox.setValue(currentOrder.getCustomer());
+        orderItemsTable.setItems(FXCollections.observableArrayList(currentOrder.getOrderItems()));
+        totalAmountLabel.setText(String.format("$%.2f", currentOrder.getTotalAmount()));
+    }
+
+    @FXML
+    public void updateOrder() {
+        if (currentOrder.getOrderItems().isEmpty() || customerComboBox.getValue() == null) {
+            showAlert("Incomplete Order", "Please select a customer and add at least one item");
+            return;
+        }
+
+        try {
+            currentOrder.setCustomer(customerComboBox.getValue());
+            currentOrder.calculateTotalAmount();
+
+            orderRepository.update(currentOrder);
+            refreshSavedOrdersTable();
+            resetCurrentOrder();
+
+        } catch (Exception e) {
+            showAlert("Error", "Failed to update order: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    public void deleteOrder() throws SQLException {
+        Order selectedOrder = savedOrdersTable.getSelectionModel().getSelectedItem();
+        if (selectedOrder != null) {
+            orderRepository.delete(selectedOrder.getId());
+            refreshSavedOrdersTable();
+        } else {
+            showAlert("No Selection", "Please select an order to delete");
+        }
+    }
+
+
+    @FXML
+    public void removeOrderItem() {
+        OrderItem selectedItem = orderItemsTable.getSelectionModel().getSelectedItem();
+        if (selectedItem != null) {
+            currentOrder.removeOrderItem(selectedItem);
+            orderItemsTable.setItems(FXCollections.observableArrayList(currentOrder.getOrderItems()));
+            totalAmountLabel.setText(String.format("$%.2f", currentOrder.getTotalAmount()));
+        } else {
+            showAlert("No Selection", "Please select an item to remove");
+        }
+    }
+
+    @FXML
+    public void cancelOrder() {
+        Order selectedOrder = savedOrdersTable.getSelectionModel().getSelectedItem();
+        if (selectedOrder != null) {
+            selectedOrder.setStatus(OrderStatus.CANCELED);
+            orderRepository.update(selectedOrder);
+            refreshSavedOrdersTable();
+        } else {
+            showAlert("No Selection", "Please select an order to cancel");
+        }
+    }
+
+
+
 
     @FXML
     public void goToProducts() {

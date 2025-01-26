@@ -52,7 +52,6 @@ public class OrderRepositoryImpl implements OrderRepository {
                 }
             }
 
-            // Insert order items
             addOrderItems(order);
         } catch (SQLException e) {
             throw new RuntimeException("Error adding order", e);
@@ -83,7 +82,6 @@ public class OrderRepositoryImpl implements OrderRepository {
             stmt.setInt(4, order.getId());
             stmt.executeUpdate();
 
-            // Update order items (delete existing and re-insert)
             deleteOrderItems(order.getId());
             addOrderItems(order);
         } catch (SQLException e) {
@@ -122,7 +120,6 @@ public class OrderRepositoryImpl implements OrderRepository {
                     Order order = new Order();
                     order.setId(rs.getInt("id"));
 
-                    // Fetch customer
                     int customerId = rs.getInt("customer_id");
                     order.setCustomer(customerRepository.findById(customerId)
                             .orElseThrow(() -> new RuntimeException("Customer not found")));
@@ -131,7 +128,6 @@ public class OrderRepositoryImpl implements OrderRepository {
                     order.setStatus(OrderStatus.valueOf(rs.getString("status")));
                     order.setTotalAmount(rs.getDouble("total_amount"));
 
-                    // Fetch order items
                     order.setOrderItems(fetchOrderItems(order));
 
                     return Optional.of(order);

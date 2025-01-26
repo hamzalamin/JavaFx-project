@@ -45,15 +45,18 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
 
     @Override
     public void update(Invoice invoice) {
-        String sql = "UPDATE invoices SET total_amount=? WHERE id=?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setDouble(1, invoice.getTotalAmount());
-            stmt.setInt(2, invoice.getId());
+        String query = "UPDATE invoices SET order_id = ?, invoice_date = ?, total_amount = ? WHERE id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, invoice.getOrder().getId());
+            stmt.setDate(2, java.sql.Date.valueOf(invoice.getInvoiceDate()));
+            stmt.setDouble(3, invoice.getTotalAmount());
+            stmt.setInt(4, invoice.getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Error updating invoice", e);
+            e.printStackTrace();
         }
     }
+
 
     @Override
     public void delete(Integer id) {

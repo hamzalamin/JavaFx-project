@@ -13,8 +13,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
-
 import java.sql.SQLException;
 
 public class ProductController {
@@ -45,24 +43,35 @@ public class ProductController {
 
     @FXML
     public void initialize() {
-        // Debugging: Check if FXML fields are injected correctly
         if (productTable == null || name == null || price == null || category == null || stock == null) {
             System.err.println("FXML injection failed. Check fx:id attributes in FXML file.");
             return;
         }
 
-        // Set up category ComboBox
         categoryComboBox.getItems().addAll("Electronics", "Clothing", "Furniture", "Automotive");
 
-        // Set up TableColumn bindings
         name.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
         price.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getPrice()));
         category.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCategory()));
         stock.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getStock()));
 
-        // Load products into the TableView
         loadProducts();
+
+        productTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                populateFields(newSelection);
+            }
+        });
     }
+
+    private void populateFields(Product product) {
+        nameField.setText(product.getName());
+        priceField.setText(String.valueOf(product.getPrice()));
+        categoryComboBox.setValue(product.getCategory());
+        stockField.setText(String.valueOf(product.getStock()));
+    }
+
+
 
     private void loadProducts() {
         try {
@@ -103,6 +112,20 @@ public class ProductController {
         } catch (SQLException e) {
             System.err.println("Error deleting product: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void updateProduct() {
+        Product selectedProduct = productTable.getSelectionModel().getSelectedItem();
+        if (selectedProduct != null) {
+            selectedProduct.setName(nameField.getText());
+            selectedProduct.setPrice(Double.parseDouble(priceField.getText()));
+            selectedProduct.setCategory(categoryComboBox.getValue());
+            selectedProduct.setStock(Integer.parseInt(stockField.getText()));
+
+            productRepository.update(selectedProduct);
+            productTable.refresh();
         }
     }
 

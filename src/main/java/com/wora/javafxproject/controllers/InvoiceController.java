@@ -95,6 +95,38 @@ public class InvoiceController {
     }
 
     @FXML
+    public void updateInvoice() {
+        Invoice selectedInvoice = invoicesTable.getSelectionModel().getSelectedItem();
+        if (selectedInvoice != null) {
+            Order selectedOrder = orderComboBox.getValue();
+            LocalDate selectedDate = invoiceDatePicker.getValue();
+
+            if (selectedOrder != null) {
+                selectedInvoice.setOrder(selectedOrder);
+                selectedInvoice.setTotalAmount(selectedOrder.getTotalAmount());
+            }
+            if (selectedDate != null) {
+                selectedInvoice.setInvoiceDate(selectedDate);
+            }
+
+            System.out.println("Selected Invoice: " + selectedInvoice.getId());
+            invoiceRepository.update(selectedInvoice);
+
+            loadInvoices();
+        } else {
+            showAlert("No Invoice Selected", "Please select an invoice to update.");
+        }
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(title);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+
+    @FXML
     public void deleteInvoice() throws SQLException {
         Invoice selectedInvoice = invoicesTable.getSelectionModel().getSelectedItem();
         if (selectedInvoice != null) {

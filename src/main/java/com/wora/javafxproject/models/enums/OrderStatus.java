@@ -1,5 +1,5 @@
 package com.wora.javafxproject.models.enums;
 
 public enum OrderStatus {
-    PENDING, VALIDATED, DELIVERED
+    PENDING, VALIDATED, DELIVERED, CANCELED
 }

@@ -1,6 +1,5 @@
 package com.wora.javafxproject.controllers;
 
-
 import com.wora.javafxproject.models.entities.Customer;
 import com.wora.javafxproject.repositories.impl.CustomerRepositoryImpl;
 import com.wora.javafxproject.repositories.interfaces.CustomerRepository;
@@ -27,9 +26,12 @@ public class CustomerController {
         this.customerRepository = new CustomerRepositoryImpl();
     }
 
-
     @FXML
     public void initialize() {
+        customerTable.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> selectCustomer()
+        );
+
         loadCustomers();
         setupTableColumns();
     }
@@ -43,7 +45,15 @@ public class CustomerController {
         lastNameCol.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getLastName()));
 
-        customerTable.getColumns().setAll(firstNameCol, lastNameCol);
+        TableColumn<Customer, String> emailCol = new TableColumn<>("Email");
+        emailCol.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getEmail()));
+
+        TableColumn<Customer, String> phoneCol = new TableColumn<>("Phone");
+        phoneCol.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getPhone()));
+
+        customerTable.getColumns().setAll(firstNameCol, lastNameCol, emailCol, phoneCol);
     }
 
     private void loadCustomers() {
