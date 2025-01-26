@@ -75,7 +75,7 @@ public class InvoiceController {
 
             @Override
             public Order fromString(String string) {
-                return null; // Not needed for display
+                return null;
             }
         });
     }
