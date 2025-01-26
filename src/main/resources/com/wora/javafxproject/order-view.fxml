@@ -1,62 +1,53 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.GridPane?>
-
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Button?>
 <VBox spacing="10" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.wora.javafxproject.controllers.OrderController">
-    <padding>
-        <Insets top="10" right="10" bottom="10" left="10"/>
-    </padding>
-
-    <Label text="Order Management" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
-
-    <!-- Customer Selection -->
-    <HBox spacing="10">
-        <Label text="Customer:"/>
-        <ComboBox fx:id="customerComboBox" prefWidth="200"/>
-    </HBox>
-
-    <!-- Product Selection and Quantity -->
-    <HBox spacing="10">
-        <Label text="Product:"/>
-        <ComboBox fx:id="productComboBox" prefWidth="200"/>
-        <Label text="Quantity:"/>
-        <TextField fx:id="quantityField" prefWidth="100"/>
-        <Button text="Add Item" onAction="#addOrderItem" style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
-    </HBox>
-
-    <!-- Product Table -->
-    <TableView fx:id="orderTable" prefHeight="200" prefWidth="600">
+    <!-- Products Table (for selecting products) -->
+    <Label text="Available Products" style="-fx-font-weight: bold;"/>
+    <TableView fx:id="productsTable" prefHeight="150" prefWidth="600">
         <columns>
-            <TableColumn fx:id="productId" text="Product ID"/>
-            <TableColumn fx:id="name" text="Product Name"/>
-            <TableColumn fx:id="price" text="Price"/>
+            <TableColumn text="ID" fx:id="productIdColumn"/>
+            <TableColumn text="Name" fx:id="productNameColumn"/>
+            <TableColumn text="Price" fx:id="productPriceColumn"/>
         </columns>
     </TableView>
 
-    <!-- Total Amount -->
-    <Label fx:id="totalAmountLabel" text="0.00" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+    <!-- Current Order Section -->
+    <Label text="Current Order" style="-fx-font-weight: bold;"/>
+    <HBox spacing="10">
+        <ComboBox fx:id="customerComboBox" promptText="Select Customer"/>
+        <ComboBox fx:id="productComboBox" promptText="Select Product"/>
+        <TextField fx:id="quantityField" promptText="Quantity"/>
+        <Button text="Add Item" onAction="#addOrderItem"/>
+    </HBox>
 
-    <!-- Create Order Button -->
-    <Button text="Create Order" onAction="#createOrder" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+    <!-- Current Order Items Table -->
+    <TableView fx:id="orderItemsTable" prefHeight="150" prefWidth="600"/>
 
-    <!-- Orders Table -->
-    <TableView fx:id="orderItemsTable" prefHeight="200" prefWidth="600">
+    <!-- Total Amount and Create Order Button -->
+    <HBox spacing="10">
+        <Label text="Total Amount:"/>
+        <Label fx:id="totalAmountLabel" text="0.00"/>
+        <Button text="Create Order" onAction="#createOrder"/>
+    </HBox>
+
+    <!-- Saved Orders Table (displays orders from the database) -->
+    <Label text="Saved Orders" style="-fx-font-weight: bold;"/>
+    <TableView fx:id="savedOrdersTable" prefHeight="200" prefWidth="600">
         <columns>
-            <TableColumn text="ID" fx:id="id"/>
-            <TableColumn text="Customer" fx:id="customer"/>
-            <TableColumn text="Order Date" fx:id="orderDate"/>
-            <TableColumn text="Status" fx:id="status"/>
-            <TableColumn text="Total Amount" fx:id="totalAmount"/>
+            <TableColumn text="Order ID" fx:id="orderIdColumn"/>
+            <TableColumn text="Customer" fx:id="orderCustomerColumn"/>
+            <TableColumn text="Date" fx:id="orderDateColumn"/>
+            <TableColumn text="Status" fx:id="orderStatusColumn"/>
+            <TableColumn text="Total" fx:id="orderTotalColumn"/>
         </columns>
     </TableView>
 
-    <!-- Update Order Status Button -->
-    <Button text="Update Status" onAction="#updateOrderStatus" style="-fx-background-color: #FFC107; -fx-text-fill: black;"/>
-
-    <!-- Navigation Buttons -->
     <HBox spacing="10">
         <Button text="Go to Products" onAction="#goToProducts" style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
         <Button text="Go to Invoices" onAction="#goToInvoices" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>

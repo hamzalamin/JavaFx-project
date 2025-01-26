@@ -71,4 +71,8 @@ public class OrderItem {
                 ", price=" + price +
                 '}';
     }
+
+    public double calculatePrice() {
+        return product.getPrice() * quantity;
+    }
 }

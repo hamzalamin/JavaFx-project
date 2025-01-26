@@ -2,6 +2,7 @@ package com.wora.javafxproject.controllers;
 
 
 import com.wora.javafxproject.models.entities.Customer;
+import com.wora.javafxproject.repositories.impl.CustomerRepositoryImpl;
 import com.wora.javafxproject.repositories.interfaces.CustomerRepository;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -14,13 +15,18 @@ import javafx.scene.control.TextField;
 import java.sql.SQLException;
 
 public class CustomerController {
-    private CustomerRepository customerRepository;
+    private final CustomerRepository customerRepository;
 
     @FXML private TableView<Customer> customerTable;
     @FXML private TextField firstNameField;
     @FXML private TextField lastNameField;
     @FXML private TextField emailField;
     @FXML private TextField phoneField;
+
+    public CustomerController() {
+        this.customerRepository = new CustomerRepositoryImpl();
+    }
+
 
     @FXML
     public void initialize() {
@@ -29,7 +35,6 @@ public class CustomerController {
     }
 
     private void setupTableColumns() {
-        // Configure table columns to map to Customer properties
         TableColumn<Customer, String> firstNameCol = new TableColumn<>("First Name");
         firstNameCol.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getFirstName()));

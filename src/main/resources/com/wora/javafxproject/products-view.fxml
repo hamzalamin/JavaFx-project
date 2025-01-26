@@ -49,4 +49,6 @@
 
     <Button text="Go to Orders" onAction="#goToOrders" style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
     <Button text="Go to Invoices" onAction="#goToInvoices" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+    <Button text="Go to Customer" onAction="#goToCustomer" style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+
 </VBox>

@@ -122,4 +122,9 @@ public class ProductController {
     public void goToInvoices() {
         HelloApplication.navigateTo("invoice-view.fxml");
     }
+
+    @FXML
+    public void goToCustomer() {
+        HelloApplication.navigateTo("customer-view.fxml");
+    }
 }

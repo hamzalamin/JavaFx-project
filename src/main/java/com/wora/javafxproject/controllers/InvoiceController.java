@@ -5,20 +5,34 @@ import com.wora.javafxproject.HelloApplication;
 import com.wora.javafxproject.models.entities.Invoice;
 import com.wora.javafxproject.models.entities.Order;
 import com.wora.javafxproject.models.enums.OrderStatus;
+import com.wora.javafxproject.repositories.impl.CustomerRepositoryImpl;
+import com.wora.javafxproject.repositories.impl.InvoiceRepositoryImpl;
+import com.wora.javafxproject.repositories.impl.OrderRepositoryImpl;
+import com.wora.javafxproject.repositories.impl.ProductRepositoryImpl;
+import com.wora.javafxproject.repositories.interfaces.CustomerRepository;
 import com.wora.javafxproject.repositories.interfaces.InvoiceRepository;
 import com.wora.javafxproject.repositories.interfaces.OrderRepository;
+import com.wora.javafxproject.repositories.interfaces.ProductRepository;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 public class InvoiceController {
-    private InvoiceRepository invoiceRepository;
-    private OrderRepository orderRepository;
+    private final InvoiceRepository invoiceRepository;
+    private final OrderRepository orderRepository;
+
+    public InvoiceController() {
+        CustomerRepository customerRepository = new CustomerRepositoryImpl();
+        ProductRepository productRepository = new ProductRepositoryImpl();
+        this.orderRepository = new OrderRepositoryImpl(customerRepository, productRepository);
+        this.invoiceRepository = new InvoiceRepositoryImpl(orderRepository);
+    }
+
 
     @FXML
     private ComboBox<Order> orderComboBox;
@@ -26,8 +40,19 @@ public class InvoiceController {
     @FXML private Label totalAmountLabel;
     @FXML private DatePicker invoiceDatePicker;
 
+    @FXML private TableColumn<Invoice, Integer> idColumn;
+    @FXML private TableColumn<Invoice, Integer> orderIdColumn;
+    @FXML private TableColumn<Invoice, LocalDate> invoiceDateColumn;
+    @FXML private TableColumn<Invoice, Double> totalAmountColumn;
+
     @FXML
     public void initialize() {
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        orderIdColumn.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getOrder().getId()));
+        invoiceDateColumn.setCellValueFactory(new PropertyValueFactory<>("invoiceDate"));
+        totalAmountColumn.setCellValueFactory(new PropertyValueFactory<>("totalAmount"));
+
         loadOrders();
         loadInvoices();
     }
@@ -38,6 +63,7 @@ public class InvoiceController {
                         orderRepository.findByStatus(OrderStatus.VALIDATED)
                 )
         );
+
     }
 
     private void loadInvoices() {

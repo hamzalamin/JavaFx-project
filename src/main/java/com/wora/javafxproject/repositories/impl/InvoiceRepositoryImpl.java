@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class InvoiceRepositoryImpl implements InvoiceRepository {
-    private Connection connection;
-    private OrderRepository orderRepository;
+    private final Connection connection;
+    private final OrderRepository orderRepository;
 
     public InvoiceRepositoryImpl(OrderRepository orderRepository) {
         try {

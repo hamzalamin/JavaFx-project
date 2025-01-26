@@ -31,6 +31,9 @@ public class OrderRepositoryImpl implements OrderRepository {
         }
     }
 
+    public OrderRepositoryImpl() {
+
+    }
 
 
     @Override

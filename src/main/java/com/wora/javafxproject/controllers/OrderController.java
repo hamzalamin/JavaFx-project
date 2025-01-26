@@ -1,55 +1,44 @@
 package com.wora.javafxproject.controllers;
 
 import com.wora.javafxproject.HelloApplication;
-import com.wora.javafxproject.models.entities.Customer;
-import com.wora.javafxproject.models.entities.Order;
-import com.wora.javafxproject.models.entities.OrderItem;
-import com.wora.javafxproject.models.entities.Product;
+import com.wora.javafxproject.models.entities.*;
 import com.wora.javafxproject.models.enums.OrderStatus;
-import com.wora.javafxproject.repositories.impl.CustomerRepositoryImpl;
-import com.wora.javafxproject.repositories.impl.OrderRepositoryImpl;
-import com.wora.javafxproject.repositories.impl.ProductRepositoryImpl;
-import com.wora.javafxproject.repositories.interfaces.CustomerRepository;
-import com.wora.javafxproject.repositories.interfaces.OrderRepository;
-import com.wora.javafxproject.repositories.interfaces.ProductRepository;
+import com.wora.javafxproject.repositories.impl.*;
+import com.wora.javafxproject.repositories.interfaces.*;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.StringConverter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class OrderController {
     private final OrderRepository orderRepository;
     private final CustomerRepository customerRepository;
     private final ProductRepository productRepository;
 
-    @FXML
-    private TableView<Order> orderTable;
-    @FXML
-    private TableColumn<Order, Integer> id;
-    @FXML
-    private TableColumn<Order, String> customer;
-    @FXML
-    private TableColumn<Order, String> orderDate;
-    @FXML
-    private TableColumn<Order, String> status;
-    @FXML
-    private TableColumn<Order, Double> totalAmount;
+    @FXML private TableView<Product> productsTable;
+    @FXML private TableColumn<Product, Integer> productIdColumn;
+    @FXML private TableColumn<Product, String> productNameColumn;
+    @FXML private TableColumn<Product, Double> productPriceColumn;
 
-    @FXML
-    private ComboBox<Customer> customerComboBox;
-    @FXML
-    private ComboBox<Product> productComboBox;
-    @FXML
-    private TextField quantityField;
-    @FXML
-    private TableView<OrderItem> orderItemsTable;
-    @FXML
-    private Label totalAmountLabel;
+    @FXML private ComboBox<Customer> customerComboBox;
+    @FXML private ComboBox<Product> productComboBox;
+    @FXML private TextField quantityField;
+
+    @FXML private TableView<OrderItem> orderItemsTable;
+    @FXML private Label totalAmountLabel;
+
+    @FXML private TableView<Order> savedOrdersTable;
+    @FXML private TableColumn<Order, Integer> orderIdColumn;
+    @FXML private TableColumn<Order, String> orderCustomerColumn;
+    @FXML private TableColumn<Order, LocalDate> orderDateColumn;
+    @FXML private TableColumn<Order, OrderStatus> orderStatusColumn;
+    @FXML private TableColumn<Order, Double> orderTotalColumn;
 
     private Order currentOrder = new Order();
 
@@ -61,81 +50,174 @@ public class OrderController {
 
     @FXML
     public void initialize() {
-        id.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getId()));
-        customer.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCustomer().getFirstName()));
-        orderDate.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getOrderDate().toString()));
-        status.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStatus().toString()));
-        totalAmount.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getTotalAmount()));
-
-        loadCustomers();
-        loadProducts();
-        setupOrderItemsTable();
-        loadOrders();
+        if (productsTable != null) setupProductsTable();
+        if (customerComboBox != null) setupCustomerComboBox();
+        if (productComboBox != null) setupProductComboBox();
+        if (orderItemsTable != null) setupOrderItemsTable();
+        if (savedOrdersTable != null) setupSavedOrdersTable();
+        loadInitialData();
+    }
+    private void setupProductsTable() {
+        productIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        productNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        productPriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
     }
 
-    private void loadOrders() {
-        ObservableList<Order> orders = FXCollections.observableArrayList(orderRepository.findAll());
-        orderTable.setItems(orders);
+    private void setupCustomerComboBox() {
+        customerComboBox.setConverter(new StringConverter<Customer>() {
+            @Override
+            public String toString(Customer customer) {
+                return customer != null ? customer.getFirstName() + " " + customer.getLastName() : "";
+            }
+
+            @Override
+            public Customer fromString(String string) {
+                return null; // Not needed
+            }
+        });
     }
 
-    private void loadCustomers() {
-        customerComboBox.setItems(FXCollections.observableArrayList(customerRepository.findAll()));
-    }
+    private void setupProductComboBox() {
+        productComboBox.setConverter(new StringConverter<Product>() {
+            @Override
+            public String toString(Product product) {
+                return product != null ? product.getName() : "";
+            }
 
-    private void loadProducts() {
-        productComboBox.setItems(FXCollections.observableArrayList(productRepository.findAll()));
+            @Override
+            public Product fromString(String string) {
+                return null; // Not needed
+            }
+        });
     }
 
     private void setupOrderItemsTable() {
         TableColumn<OrderItem, String> productColumn = new TableColumn<>("Product");
-        productColumn.setCellValueFactory(new PropertyValueFactory<>("product"));
+        productColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getProduct().getName()));
 
         TableColumn<OrderItem, Integer> quantityColumn = new TableColumn<>("Quantity");
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
 
-        TableColumn<OrderItem, Double> priceColumn = new TableColumn<>("Price");
-        priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+        TableColumn<OrderItem, Double> priceColumn = new TableColumn<>("Total Price");
+        priceColumn.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().calculatePrice()));
 
-        orderItemsTable.getColumns().addAll(productColumn, quantityColumn, priceColumn);
+        orderItemsTable.getColumns().setAll(productColumn, quantityColumn, priceColumn);
+    }
+
+    private void setupSavedOrdersTable() {
+        orderIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+
+        orderCustomerColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(
+                        cellData.getValue().getCustomer() != null ?
+                                cellData.getValue().getCustomer().getFirstName() + " " +
+                                        cellData.getValue().getCustomer().getLastName() :
+                                "N/A"
+                ));
+
+        orderDateColumn.setCellValueFactory(new PropertyValueFactory<>("orderDate"));
+        orderStatusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
+
+        orderTotalColumn.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getTotalAmount()));
+    }
+
+    private void loadInitialData() {
+        // Load products
+        List<Product> products = productRepository.findAll();
+        productsTable.setItems(FXCollections.observableArrayList(products));
+
+        // Load products into the combo box
+        productComboBox.setItems(FXCollections.observableArrayList(products));
+
+        // Load customers
+        List<Customer> customers = customerRepository.findAll();
+        customerComboBox.setItems(FXCollections.observableArrayList(customers));
+
+        // Load saved orders
+        refreshSavedOrdersTable();
     }
 
     @FXML
     public void addOrderItem() {
-        Product selectedProduct = productComboBox.getValue();
-        int quantity = Integer.parseInt(quantityField.getText());
+        try {
+            Product selectedProduct = productComboBox.getValue();
+            int quantity = Integer.parseInt(quantityField.getText());
 
-        OrderItem orderItem = new OrderItem(selectedProduct, quantity);
-        currentOrder.addOrderItem(orderItem);
+            if (selectedProduct == null || quantity <= 0) {
+                showAlert("Invalid Input", "Please select a product and enter valid quantity");
+                return;
+            }
 
-        orderItemsTable.setItems(FXCollections.observableArrayList(currentOrder.getOrderItems()));
-        totalAmountLabel.setText(String.format("%.2f", currentOrder.getTotalAmount()));
+            OrderItem orderItem = new OrderItem(selectedProduct, quantity);
+            currentOrder.addOrderItem(orderItem);
+
+            orderItemsTable.setItems(FXCollections.observableArrayList(currentOrder.getOrderItems()));
+            totalAmountLabel.setText(String.format("$%.2f", currentOrder.getTotalAmount()));
+
+            // Clear input fields
+            productComboBox.getSelectionModel().clearSelection();
+            quantityField.clear();
+
+        } catch (NumberFormatException e) {
+            showAlert("Invalid Input", "Please enter a valid numeric quantity");
+        }
     }
 
     @FXML
     public void createOrder() {
-        currentOrder.setCustomer(customerComboBox.getValue());
-        currentOrder.setOrderDate(LocalDate.now());
-        currentOrder.setStatus(OrderStatus.PENDING);
+        if (currentOrder.getOrderItems().isEmpty() || customerComboBox.getValue() == null) {
+            showAlert("Incomplete Order", "Please select a customer and add at least one item");
+            return;
+        }
 
-        orderRepository.add(currentOrder);
-        loadOrders();
-        resetOrder();
+        try {
+            currentOrder.setCustomer(customerComboBox.getValue());
+            currentOrder.setOrderDate(LocalDate.now());
+            currentOrder.setStatus(OrderStatus.PENDING);
+            currentOrder.calculateTotalAmount();
+
+            orderRepository.add(currentOrder);
+            refreshSavedOrdersTable();
+            resetCurrentOrder();
+
+        } catch (Exception e) {
+            showAlert("Error", "Failed to create order: " + e.getMessage());
+        }
     }
 
-    private void resetOrder() {
+    private void refreshSavedOrdersTable() {
+        List<Order> orders = orderRepository.findAll();
+        savedOrdersTable.setItems(FXCollections.observableArrayList(orders));
+    }
+
+    private void resetCurrentOrder() {
         currentOrder = new Order();
         orderItemsTable.getItems().clear();
-        totalAmountLabel.setText("0.00");
+        totalAmountLabel.setText("$0.00");
+        customerComboBox.getSelectionModel().clearSelection();
     }
 
     @FXML
     public void updateOrderStatus() {
-        Order selectedOrder = orderTable.getSelectionModel().getSelectedItem();
+        Order selectedOrder = savedOrdersTable.getSelectionModel().getSelectedItem();
         if (selectedOrder != null) {
             selectedOrder.setStatus(OrderStatus.VALIDATED);
             orderRepository.update(selectedOrder);
-            loadOrders();
+            refreshSavedOrdersTable();
+        } else {
+            showAlert("No Selection", "Please select an order to update");
         }
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     @FXML
