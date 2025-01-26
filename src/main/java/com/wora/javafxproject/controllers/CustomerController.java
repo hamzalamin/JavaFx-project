@@ -1,5 +1,6 @@
 package com.wora.javafxproject.controllers;
 
+import com.wora.javafxproject.HelloApplication;
 import com.wora.javafxproject.models.entities.Customer;
 import com.wora.javafxproject.repositories.impl.CustomerRepositoryImpl;
 import com.wora.javafxproject.repositories.interfaces.CustomerRepository;
@@ -114,5 +115,25 @@ public class CustomerController {
         lastNameField.clear();
         emailField.clear();
         phoneField.clear();
+    }
+
+    @FXML
+    public void goToProducts() {
+        HelloApplication.navigateTo("products-view.fxml");
+    }
+
+    @FXML
+    public void goToOrders() {
+        HelloApplication.navigateTo("order-view.fxml");
+    }
+
+    @FXML
+    public void goToCustomer() {
+        HelloApplication.navigateTo("customer-view.fxml");
+    }
+
+    @FXML
+    public void goToInvoices() {
+        HelloApplication.navigateTo("invoice-view.fxml");
     }
 }

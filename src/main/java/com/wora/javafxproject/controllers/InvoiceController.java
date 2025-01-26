@@ -135,11 +135,24 @@ public class InvoiceController {
         }
     }
 
+    @FXML
     public void goToProducts() {
         HelloApplication.navigateTo("products-view.fxml");
     }
 
+    @FXML
     public void goToOrders() {
-        HelloApplication.navigateTo("orders-view.fxml");
+        HelloApplication.navigateTo("order-view.fxml");
     }
+
+    @FXML
+    public void goToCustomer() {
+        HelloApplication.navigateTo("customer-view.fxml");
+    }
+
+    @FXML
+    public void goToInvoices() {
+        HelloApplication.navigateTo("invoice-view.fxml");
+    }
+
 }

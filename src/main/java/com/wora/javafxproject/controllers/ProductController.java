@@ -137,17 +137,22 @@ public class ProductController {
     }
 
     @FXML
+    public void goToProducts() {
+        HelloApplication.navigateTo("products-view.fxml");
+    }
+
+    @FXML
     public void goToOrders() {
         HelloApplication.navigateTo("order-view.fxml");
     }
 
     @FXML
-    public void goToInvoices() {
-        HelloApplication.navigateTo("invoice-view.fxml");
+    public void goToCustomer() {
+        HelloApplication.navigateTo("customer-view.fxml");
     }
 
     @FXML
-    public void goToCustomer() {
-        HelloApplication.navigateTo("customer-view.fxml");
+    public void goToInvoices() {
+        HelloApplication.navigateTo("invoice-view.fxml");
     }
 }

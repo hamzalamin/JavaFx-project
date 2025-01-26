@@ -292,11 +292,19 @@ public class OrderController {
     }
 
 
-
-
     @FXML
     public void goToProducts() {
-        HelloApplication.navigateTo("product-view.fxml");
+        HelloApplication.navigateTo("products-view.fxml");
+    }
+
+    @FXML
+    public void goToOrders() {
+        HelloApplication.navigateTo("order-view.fxml");
+    }
+
+    @FXML
+    public void goToCustomer() {
+        HelloApplication.navigateTo("customer-view.fxml");
     }
 
     @FXML
