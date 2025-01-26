@@ -41,6 +41,19 @@ mvn clean package
 This will generate a JAR file in the target directory:
 JavaFx-project-1.0-SNAPSHOT-jar-with-dependencies.jar
 
+Or:
+
+Ensure JavaFX SDK is downloaded and extracted to a directory, e.g.:
+```bash
+C:\Users\<your-username>\Desktop\javafx-sdk-23.0.2\lib
+```
+Run the application from the command prompt:
+
+```bash
+java --module-path "C:\Users\<your-username>\Desktop\javafx-sdk-23.0.2\lib" --add-modules javafx.controls,javafx.fxml -jar "C:\Users\<your-username>\Desktop\JavaFx-project\target\JavaFx-project-1.0-SNAPSHOT-jar-with-dependencies.jar"
+```
+
+
 ## Project Structure
 
 The project is organized as follows:
