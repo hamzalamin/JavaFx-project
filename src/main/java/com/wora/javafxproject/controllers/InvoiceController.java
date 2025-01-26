@@ -18,9 +18,11 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.StringConverter;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.List;
 
 public class InvoiceController {
     private final InvoiceRepository invoiceRepository;
@@ -58,12 +60,24 @@ public class InvoiceController {
     }
 
     private void loadOrders() {
-        orderComboBox.setItems(
-                FXCollections.observableArrayList(
-                        orderRepository.findByStatus(OrderStatus.VALIDATED)
-                )
-        );
+        List<Order> orders = orderRepository.findAll();
 
+        orderComboBox.setItems(FXCollections.observableArrayList(orders));
+
+        orderComboBox.setConverter(new StringConverter<Order>() {
+            @Override
+            public String toString(Order order) {
+                if (order == null) {
+                    return "";
+                }
+                return "Order #" + order.getId() + " - " + order.getCustomer().getFirstName();
+            }
+
+            @Override
+            public Order fromString(String string) {
+                return null; // Not needed for display
+            }
+        });
     }
 
     private void loadInvoices() {
