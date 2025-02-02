@@ -19,7 +19,7 @@ If you are using Git, clone the repository to your local machine:
 ## Set Up the PostgreSQL Database
 
 - Install PostgreSQL and ensure the PostgreSQL service is running.
-- Create a new database named `javafx_project`.
+- Create a new database named `java_fx_project`.
 - Update the database connection details in the application configuration file (if applicable).
 
 ## Building the Project
