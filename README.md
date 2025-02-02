@@ -22,44 +22,16 @@ If you are using Git, clone the repository to your local machine:
 - Create a new database named `java_fx_project`.
 - Update the database connection details in the application configuration file (if applicable).
 
-## Building the Project
-
-To build the project, follow these steps:
-
-### 1. Navigate to the Project Directory
-
-```bash
-cd JavaFx-project
-```
-### 2. Build the Project Using Maven
-
-Run the following command to clean and package the project:
-
-```bash
-mvn clean package
-```
-This will generate a JAR file in the target directory:
-JavaFx-project-1.0-SNAPSHOT-jar-with-dependencies.jar
-
-Or:
-
-Ensure JavaFX SDK is downloaded and extracted to a directory, e.g.:
-```bash
-C:\Users\<your-username>\Desktop\javafx-sdk-23.0.2\lib
-```
-Run the application from the command prompt:
-
-```bash
-java --module-path "C:\Users\<your-username>\Desktop\javafx-sdk-23.0.2\lib" --add-modules javafx.controls,javafx.fxml -jar "C:\Users\<your-username>\Desktop\JavaFx-project\target\JavaFx-project-1.0-SNAPSHOT-jar-with-dependencies.jar"
-```
-
-
 ## Project Structure
 
 The project is organized as follows:
 
 ```bash
 JavaFx-project/
+├── out/
+│   ├── artifacts/
+│   │   └── JavaFx_project_jar2/
+│   │       └── JavaFx-project.jar   # JAR file                          
 ├── src/
 │   ├── main/
 │   │   ├── java/                  # Java source files
